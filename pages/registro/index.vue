@@ -1,24 +1,76 @@
 <template>
-    <div class="contenedor">
-        <div class="info-registro">
-            <h1>Registro de usuario</h1>
-            <form @submit.prevent="registerForm">
-                <div>
-                    <label for="user">Usuario</label>
-                    <input type="text" name="user" id="user">
-                </div>
-                <div>
-                    <label for="password">Contraseña</label>
-                    <input type="password" name="password" id="password">
-                </div>
-                <div class="buttons">
-                    <button @click="irALogin">Registrarse</button>
-                </div>
-            </form>
-            <p v-if="mensaje">{{ mensaje }}</p>
+    <div class="flex h-screen items-center justify-center">
+      <v-card
+        class="mx-auto pa-12 pb-8"
+        elevation="8"
+        max-width="448"
+        rounded="lg"
+      >
+        <div class="text-subtitle-1 text-medium-emphasis">Cuenta</div>
+  
+        <v-text-field
+          density="compact"
+          placeholder="example@correo.com"
+          prepend-inner-icon="mdi-email-outline"
+          variant="outlined"
+        ></v-text-field>
+  
+        <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
+          Contraseña
+          <a
+            class="text-caption text-decoration-none text-blue"
+            href="#"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            ¿Olvidaste la contraseña?</a>
         </div>
+  
+        <v-text-field
+          :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+          :type="visible ? 'text' : 'password'"
+          density="compact"
+          placeholder="Ingresa la contraseña"
+          prepend-inner-icon="mdi-lock-outline"
+          variant="outlined"
+          @click:append-inner="visible = !visible"
+        ></v-text-field>
+  
+        <v-card
+          class="mb-12"
+          color="surface-variant"
+          variant="tonal"
+        >
+          <v-card-text class="text-medium-emphasis text-caption">
+            Tienes que registrarte primero antes de usar la aplicación
+          </v-card-text>
+        </v-card>
+  
+        <v-btn
+          class="mb-8"
+          color="blue"
+          size="large"
+          variant="tonal"
+          block
+        >
+          Ingresa
+        </v-btn>
+  
+        <v-card-text class="text-center">
+          <a
+            class="text-blue text-decoration-none"
+            href="#"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            REGISTRATE <v-icon icon="mdi-chevron-right"></v-icon>
+          </a>
+        </v-card-text>
+      </v-card>
     </div>
-</template>
+  </template>
+  
+
 
 <script>
 import { ref } from 'vue'
