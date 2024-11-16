@@ -80,7 +80,7 @@
 
 <style scoped>
 .large-icon {
-  margin-topp: 1px;
+  margin-top: 1px;
   width: 35px;
   height: 35px;
 }
@@ -88,7 +88,7 @@
   color: #e29818ff;
 }
 .background {
-  background-color: #fff1d95a; /* Cambia este color al que prefieras */
+  background-color: #fff1d95a;
   min-height: 100vh;
   display: flex;
   justify-content: center;

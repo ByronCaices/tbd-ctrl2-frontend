@@ -88,7 +88,7 @@
     color: rgb(215, 170, 21);
   }
   .background {
-    background-color: #fff1d95a; /* Cambia este color al que prefieras */
+    background-color: #fff1d95a; 
     min-height: 100vh;
     display: flex;
     justify-content: center;
