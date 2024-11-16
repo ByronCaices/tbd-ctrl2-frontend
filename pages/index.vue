@@ -14,8 +14,9 @@
         max-width="500">
         <v-card-title class="text-h4 font-weight-bold text-uppercase">
           Login
+          <svg-icon class="large-icon" type="mdi" :path="path"></svg-icon>
         </v-card-title>
-        <svg-icon type="mdi" :path="path"></svg-icon>
+        
       </v-card>
     </div>
 
@@ -78,6 +79,11 @@
 </template>
 
 <style scoped>
+.large-icon {
+  margin-topp: 1px;
+  width: 35px;
+  height: 35px;
+}
 .custom-text-color {
   color: #e29818ff;
 }

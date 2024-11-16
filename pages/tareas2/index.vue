@@ -1,18 +1,8 @@
 <template>
-    <div >
-        <header>
-            <h1>Control 2</h1>
-            <nav>
-                <button> Notificaciones</button>
-                <button> Cerrar sesión</button>
-            </nav>
-        </header>
-    </div>
-    <div class="boton-tareas">
-        <button @click="irAAñadir" class="anadir-tareas">Añadir tareas</button>
-    </div>
-    <div class="tareas">
-        <h1>Tareas</h1>
+    <div class="container my-8">
+      <v-card flat>
+        <v-card-title class="text-h4 font-weight-bold">Task List</v-card-title>
+        <v-divider></v-divider>
         <v-list>
           <v-list-item
             v-for="(task, index) in tasks"
@@ -22,7 +12,7 @@
           >
             <div>
               <div class="font-weight-bold">{{ task.name }}</div>
-              <div class="text-caption">Fecha: {{ task.due }}</div>
+              <div class="text-caption">Due: {{ task.due }}</div>
             </div>
             <div class="d-flex align-center">
               <v-chip
@@ -32,100 +22,73 @@
               >
                 {{ task.status }}
               </v-chip>
-            
+              <span>{{ task.amount }} EUR</span>
             </div>
           </v-list-item>
         </v-list>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-btn @click="addTask" color="primary" block>
+            Add New Task
+          </v-btn>
+        </v-card-actions>
+      </v-card>
     </div>
-</template>
-
-<script>
-import { ref } from 'vue'
-import axios from 'axios'
-import { useRouter } from 'vue-router'
-export default {
-    name: 'Tareas',
+  </template>
+  
+  <script>
+  export default {
     data() {
-        return { tasks: [
+      return {
+        tasks: [
           {
-            name: "Comprar pan",
+            name: "Jenny Wilson",
             due: "10/09/202X",
             status: "PENDING",
             color: "yellow",
+            amount: 120,
           },
           {
             name: "Dianne Russell",
             due: "21/10/202X",
             status: "PAID",
             color: "green",
+            amount: 82.5,
           },
           {
             name: "Jerome Bell",
             due: "20/12/202X",
             status: "PAID",
             color: "green",
+            amount: 250,
           },
           {
             name: "Courtney Henry",
             due: "01/05/202X",
             status: "UNPAID",
             color: "pink",
+            amount: 60,
           },
         ],
-        };
+      };
     },
-    setup() {
-        const router = useRouter()
-        const irAAñadir = () => {
-            router.push('/agregar-tarea')
-        }
-        return {
-            irAAñadir
-        }
-    }
-};
-</script>
-
-<style scoped>
-header{
-    display: flex;
-    justify-content: space-between;
-    background-color: lightblue;
-}
-nav{
-    display: flex;
-    height: 50px;
-    gap: 10px;
-    margin-top: 15px;
-    margin-right: 20px;
-}
-.boton-tareas{
-    display: flex;
-    justify-content: center;
-    margin-right: 20px;
-    margin-top: 20px;
-}
-.tareas {
-    padding: 20px;
-}
-
-.tareas h1 {
-    font-size: 24px;
-    margin-bottom: 10px;
-}
-
-.tareas ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.tareas li {
-    background: #f9f9f9;
-    margin: 5px 0;
-    padding: 10px;
-    border: 1px solid #ddd;
-}
-.PAID {
+    methods: {
+      addTask() {
+        const newTask = {
+          name: "New Task",
+          due: "DD/MM/YYYY",
+          status: "PENDING",
+          color: "yellow",
+          amount: 0,
+        };
+        this.tasks.push(newTask);
+      },
+    },
+  };
+  </script>
+  
+  <style scoped>
+  .PAID {
     background-color: #e8f5e9;
     border-left: 4px solid #4caf50;
   }
@@ -141,4 +104,5 @@ nav{
     max-width: 600px;
     margin: 0 auto;
   }
-</style>
+  </style>
+  
