@@ -1,80 +1,107 @@
-<template>
-  <div class="contenedor">
-      <div class="info-login">
-          <h1>Inicio de sesión</h1>
-          <form @submit.prevent="loginForm">
-              <div>
-                  <label for="user">Usuario</label>
-                  <input type="text" name="user" id="user">
-              </div>
-              <div>
-                  <label for="password">Contraseña</label>
-                  <input type="password" name="password" id="password">
-              </div>
-              <div class="buttons">
-                  <button @click="irATareas">Login</button>
-                  <button @click="irARegistro">Registrarse</button>
-              </div>
-      </form>
-      <p v-if="mensaje">{{ mensaje }}</p>
+<template >
+  <div class="background">
+    <v-card
+      class="mx-auto pa-12 pb-8 mt-16 position-relative"
+      elevation="8"
+      max-width="448"
+      rounded="lg"
+      color=""
+    >
+    <div class="text-center my-8">
+      <v-card flat 
+        class="elevation-6 pa-4" 
+        color="#FAE5C4ff"
+        max-width="500">
+        <v-card-title class="text-h4 font-weight-bold text-uppercase">
+          Login
+        </v-card-title>
+        <svg-icon type="mdi" :path="path"></svg-icon>
+      </v-card>
+    </div>
+
+      <div class="text-subtitle-1 text-medium-emphasis">Cuenta</div>
+
+      <v-text-field
+        density="compact"
+        placeholder="ejemplo@corre.com"
+        prepend-inner-icon="mdi-email-outline"
+        variant="outlined"
+      ></v-text-field>
+
+      <div
+        class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between"
+      >
+        Contraseña
+
+        <a
+          class="text-caption text-decoration-none custom-text-color"
+          href="#"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Olvidaste la contraseña?</a
+        >
       </div>
+
+      <v-text-field
+        :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+        :type="visible ? 'text' : 'password'"
+        density="compact"
+        placeholder="Ingresa la contraseña"
+        prepend-inner-icon="mdi-lock-outline"
+        variant="outlined"
+        @click:append-inner="visible = !visible"
+      ></v-text-field>
+
+      <v-card class="mb-12" color="surface-variant" variant="tonal">
+        <v-card-text class="text-medium-emphasis text-caption">
+          Recuerda: Tienes que registrarte primero antes de usar la aplicación
+        </v-card-text>
+      </v-card>
+
+      <v-btn class="mb-8" color="#e29818ff" size="large" variant="tonal" block>
+        Ingresar
+      </v-btn>
+
+      <v-card-text class="text-center">
+        <nuxt-link
+          class="register text-darken-1 text-decoration-none custom-text-color"
+          to="/registro"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Registrate ahora <v-icon icon="mdi-chevron-right"></v-icon>
+        </nuxt-link>
+      </v-card-text>
+    </v-card>
   </div>
 </template>
 
-<script>
-import { ref } from 'vue'
-import axios from 'axios'
-import { useRouter } from 'vue-router'
-
-export default {
-name: "loginView",
-setup() {
-  const router = useRouter()
-  const irARegistro = () => {
-    router.push('/register')
-  }
-  const irATareas = () => {
-    router.push('/tasks')
-  }
-  return { 
-    irARegistro,
-      irATareas
-  }
-}
-}
-</script>
-
 <style scoped>
-.contenedor {
+.custom-text-color {
+  color: #e29818ff;
+}
+.background {
+  background-color: #fff1d95a; /* Cambia este color al que prefieras */
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  width: 100vw;
-  box-sizing: border-box;
-}
-
-.info-login {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 400px;
-  padding: 20px;
-  box-sizing: border-box;
-  border: 1px solid black;
-  border-radius: 5px;
-}
-
-input {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  box-sizing: border-box;
-}
-
-.buttons {
-  width: 100%;
-  display: flex;
-  justify-content: space-around;
 }
 </style>
+
+<script>
+import SvgIcon from '@jamescoyle/vue-icon';
+import { mdiAccountCircleOutline } from '@mdi/js';
+
+  export default {
+    name: "my-component",
+    components: {
+    SvgIcon
+    },
+    data: () => ({
+      visible: false,
+      path: mdiAccountCircleOutline,
+    }),
+  }
+</script>

@@ -1,76 +1,100 @@
-<template>
-    <div class="flex h-screen items-center justify-center">
+<template >
+    <div class="background">
       <v-card
-        class="mx-auto pa-12 pb-8"
+        class="mx-auto pa-12 pb-8 mt-16 position-relative"
         elevation="8"
         max-width="448"
+        min-height="448"
         rounded="lg"
+        color=""
       >
-        <div class="text-subtitle-1 text-medium-emphasis">Cuenta</div>
+      <div class="text-center my-8">
+        <v-card flat 
+          class="elevation-6 pa-4" 
+          color="#FAE5C4ff"
+          max-width="500">
+          <v-card-title class="text-h4 font-weight-bold text-uppercase">
+            Register
+          </v-card-title>
+          <svg-icon type="mdi" :path="path"></svg-icon>
+        </v-card>
+      </div>
+  
+        <div class="text-subtitle-1 text-medium-emphasis">Correo</div>
   
         <v-text-field
           density="compact"
-          placeholder="example@correo.com"
+          placeholder="ejemplo@correo.com"
           prepend-inner-icon="mdi-email-outline"
           variant="outlined"
         ></v-text-field>
   
-        <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
+        <div
+          class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between"
+        >
           Contraseña
-          <a
-            class="text-caption text-decoration-none text-blue"
-            href="#"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            ¿Olvidaste la contraseña?</a>
         </div>
   
         <v-text-field
+          v-model="password"
           :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
           :type="visible ? 'text' : 'password'"
           density="compact"
           placeholder="Ingresa la contraseña"
+          hint="La contraseña debe tener al menos 8 caracteres, 4 letras y 4 números"
+          prepend-inner-icon="mdi-lock-outline"
+          variant="outlined"
+          @click:append-inner="visible = !visible"
+        ></v-text-field>
+
+        <div
+          class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between"
+        >
+          Confirma contraseña
+        </div>
+  
+        <v-text-field
+          v-model="confirmPassword"
+          :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+          :type="visible ? 'text' : 'password'"
+          density="compact"
+          placeholder="Ingresa nuevamente la contraseña"
+          hint="Las contraseñas tinen que ser iguales"
           prepend-inner-icon="mdi-lock-outline"
           variant="outlined"
           @click:append-inner="visible = !visible"
         ></v-text-field>
   
-        <v-card
-          class="mb-12"
-          color="surface-variant"
-          variant="tonal"
-        >
+        <v-card class="mb-12 custom-text-color"  variant="tonal">
           <v-card-text class="text-medium-emphasis text-caption">
-            Tienes que registrarte primero antes de usar la aplicación
+            Recuerda: Elige una contrseña segura y que puedas recordar
           </v-card-text>
         </v-card>
   
-        <v-btn
-          class="mb-8"
-          color="blue"
-          size="large"
-          variant="tonal"
-          block
-        >
-          Ingresa
+        <v-btn class="mb-8" color="#e29818ff" size="large" variant="tonal" block @click="register">
+            Registrarme
         </v-btn>
   
-        <v-card-text class="text-center">
-          <a
-            class="text-blue text-decoration-none"
-            href="#"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            REGISTRATE <v-icon icon="mdi-chevron-right"></v-icon>
-          </a>
-        </v-card-text>
+        <v-alert v-if="errorMessage" type="error" class="mt-4">
+          {{ errorMessage }}
+        </v-alert>
+        
       </v-card>
     </div>
   </template>
   
-
+<style scoped>
+  .custom-text-color {
+    color: rgb(215, 170, 21);
+  }
+  .background {
+    background-color: #fff1d95a; /* Cambia este color al que prefieras */
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+</style>
 
 <script>
 import { ref } from 'vue'
@@ -81,47 +105,28 @@ export default {
   name: "loginView",
   setup() {
     const router = useRouter()
-    const irALogin = () => {
-      router.push('/')
+    const visible = ref(false)
+    const password = ref('')
+    const confirmPassword = ref('')
+    const errorMessage = ref('')
+
+    const register = () => {
+      if (password.value !== confirmPassword.value) {
+        errorMessage.value = 'Las contraseñas no coinciden'
+      }
+      if (password.value.length < 8) {
+        errorMessage.value = 'La contraseña debe tener al menos 8 caracteres'
+        // Proceed with registration logic
+      }
     }
+
     return { 
-      irALogin,
+      visible,
+      password,
+      confirmPassword,
+      errorMessage,
+      register,
     }
   }
 }
 </script>
-
-<style scoped>
-.contenedor {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100vw;
-    box-sizing: border-box;
-}
-
-.info-registro {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 400px;
-    padding: 20px;
-    box-sizing: border-box;
-    border: 1px solid black;
-    border-radius: 5px;
-}
-
-input {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    box-sizing: border-box;
-}
-.buttons{
-    width:100%;
-    display: flex;
-    justify-content: space-around;
-    
-}
-</style>
