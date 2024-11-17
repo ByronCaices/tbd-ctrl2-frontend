@@ -130,6 +130,7 @@
       };
     },
     setup() {
+<<<<<<< Updated upstream
       const router = useRouter();
       const irAAñadir = () => {
         router.push("/tareas/nueva");
@@ -151,6 +152,21 @@
   .background {
     background-color: #fff1d95a;
     min-height: 100vh;
+=======
+        const router = useRouter()
+        const irAAñadir = () => {
+            router.push('/tareas/nueva')
+        }
+        return {
+            irAAñadir
+        }
+    }
+};
+</script>
+
+<style scoped>
+header{
+>>>>>>> Stashed changes
     display: flex;
     flex-direction: column;
     align-items: center;
