@@ -39,8 +39,8 @@ export const useNotaService = () => {
      * @param nota - Objeto que contiene los datos actualizados de la nota.
      * @returns El objeto Nota actualizado.
      */
-    const updateNota = async (id: number, nota: Nota): Promise<Nota> => {
-        const { data } = await $axiosService.put<Nota>(`/api/notas/${id}`, nota);
+    const updateNota = async (nota: Nota): Promise<Nota> => {
+        const { data } = await $axiosService.put<Nota>(`/api/nota/`, nota);
         return data;
     };
 

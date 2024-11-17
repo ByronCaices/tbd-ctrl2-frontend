@@ -32,16 +32,7 @@
       <div
         class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between"
       >
-        Contraseña
-
-        <a
-          class="text-caption text-decoration-none custom-text-color"
-          href="#"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          Olvidaste la contraseña?</a
-        >
+        Contraseña        
       </div>
 
       <v-text-field

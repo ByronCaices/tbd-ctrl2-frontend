@@ -37,7 +37,7 @@
         <h1>Tareas</h1>
         <v-list>
           <v-list-item
-            v-for="(task, index) in tasks"
+            v-for="(nota, index) in notas"
             :key="index"
             class="d-flex align-center justify-space-between"
           >
@@ -45,31 +45,32 @@
               class="mx-auto pa-4 mt-2 mb-3"
               elevation="8"
               rounded="lg"
-              :color="task.status === 'COMPLETADO' ? '#e8f5e9' : '#ffebee'"
+              :color="nota.completa_check_nota ? '#e8f5e9' : '#ffebee'"
             >
               <div class="d-flex justify-between">
                 <div>
-                  <div class="font-weight-bold">{{ task.name }}</div>
-                  <div class="text-caption">Fecha: {{ task.due }}</div>
+                  <div class="font-weight-bold">{{ nota.nombre_notas }}</div>
+                  <div class="text-caption">Fecha: {{ nota.fecha_nota }}</div>
+                  <div class="text-body-1">{{ nota.contenido_nota }}</div>
                 </div>
                 <div class="d-flex align-center">
                   <v-chip
-                    :color="task.status === 'COMPLETADO' ? 'green' : 'red'"
+                    :color="nota.completa_check_nota ? 'green' : 'red'"
                     class="ma-2"
                     small
                   >
-                    {{ task.status }}
+                    {{ nota.completa_check_nota ? 'COMPLETADO' : 'PENDIENTE' }}
                   </v-chip>
                 </div>
               </div>
-  
+              <v-spacer></v-spacer>
               <div class="boton-editar-eliminar d-flex justify-between mt-4">
                 <v-btn 
                   class="mx-2 px-4"
                   color="#E29818FF"
                   size="small"
                   outlined
-                  @click=""
+                  @click="completarTarea(index)"
                 >
                   Completar tarea
                 </v-btn>
@@ -86,6 +87,7 @@
                   color="red darken-1"
                   size="small"
                   outlined
+                  @click="eliminarTarea(index)"
                 >
                   Eliminar tarea
                 </v-btn>
@@ -100,48 +102,68 @@
   <script>
   import { ref } from "vue";
   import { useRouter } from "vue-router";
+  import { useNotaService } from "~/services/notaService";
+
   
   export default {
     name: "Tareas",
     data() {
       return {
-        tasks: [
+        notas: [
           {
-            name: "Comprar pan",
-            due: "10/09/202X",
-            status: "PENDIENTE",
+            id: 1,
+            nombre_notas: "Comprar pan",
+            fecha_nota: "10/09/202X",
+            contenido_nota: "Comprar pan integral en la panadería de la esquina.",
+            completa_check_nota: false,
           },
           {
-            name: "Ir al gimnasio",
-            due: "21/10/202X",
-            status: "COMPLETADO",
+            id: 2,
+            nombre_notas: "Ir al gimnasio",
+            fecha_nota: "21/10/202X",
+            contenido_nota: "Hacer una rutina de pesas y 30 minutos de cardio.",
+            completa_check_nota: true,
           },
           {
-            name: "Pagar la renta",
-            due: "20/12/202X",
-            status: "PENDIENTE",
+            id: 3,
+            nombre_notas: "Pagar la renta",
+            fecha_nota: "20/12/202X",
+            contenido_nota: "Transferir el dinero de la renta al propietario.",
+            completa_check_nota: false,
           },
           {
-            name: "Enviar email",
-            due: "01/05/202X",
-            status: "COMPLETADO",
+            id: 4,
+            nombre_notas: "Enviar email",
+            fecha_nota: "01/05/202X",
+            contenido_nota: "Enviar el informe mensual al jefe.",
+            completa_check_nota: true,
           },
         ],
       };
     },
     setup() {
       const router = useRouter();
+      const {updateNota} = useNotaService();
+      const {deleteNota} = useNotaService();
+      
+      const eliminarTarea = (index) => {
+        deleteNota(this.notas[index].id);
+      };
+
       const irAAñadir = () => {
         router.push("/tareas/nueva");
       };
   
       const completarTarea = (index) => {
-        this.tasks[index].status = "COMPLETADO";
+        this.notas[index].completa_check_nota = true;
+        updateNota(this.notas[index]);
+
       };
   
       return {
         irAAñadir,
         completarTarea,
+        eliminarTarea,
       };
     },
   };
@@ -149,7 +171,7 @@
   
   <style scoped>
   .background {
-    background-color: #fff1d95a;
+    background-color: #ffffff;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -218,4 +240,3 @@
     gap: 10px;
   }
   </style>
-  

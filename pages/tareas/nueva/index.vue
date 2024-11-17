@@ -3,37 +3,56 @@
         <h1>Agregar Tarea</h1>
         <form @submit.prevent="submitForm">
             <div>
-                <label for="nombre">Nombre:</label>
-                <input type="text" id="nombre" v-model="nombre" required>
+                <label for="nombre_notas">Nombre:</label>
+                <input type="text" id="nombre_notas" v-model="nombre_notas" required>
             </div>
             <div>
-                <label for="descripcion">Descripción:</label>
-                <textarea id="descripcion" v-model="descripcion" required></textarea>
+                <label for="contenido_nota">Descripción:</label>
+                <textarea id="contenido_nota" v-model="contenido_nota" required></textarea>
             </div>
             <div>
-                <label for="fecha">Fecha de Termino:</label>
-                <input type="date" id="fecha" v-model="fecha" required>
+                <label for="fecha_nota">Fecha de Termino:</label>
+                <input type="date" id="fecha_nota" v-model="fecha_nota" required>
             </div>
+            
             <button type="submit">Agregar Tarea</button>
         </form>
     </div>
 </template>
 
 <script>
+import { useNotaService } from '~/services/notaService';
+
 export default {
     data() {
         return {
-            nombre: '',
-            descripcion: '',
-            fecha: ''
+            nombre_notas: '',
+            contenido_nota: '',
+            fecha_nota: '',
+            completa_check_nota: false
         };
     },
     methods: {
-        submitForm() {
-            // Aquí puedes manejar el envío del formulario
-            console.log('Nombre:', this.nombre);
-            console.log('Descripción:', this.descripcion);
-            console.log('Fecha de Termino:', this.fecha);
+        async submitForm() {
+            console.log('Nombre:', this.nombre_notas);
+            console.log('Descripción:', this.contenido_nota);
+            console.log('Fecha de Termino:', this.fecha_nota);
+
+            const { createNota } = useNotaService();
+            const nuevaNota = {
+                id_nota: 0, //Esto se deberia crear solo
+                id_usuario: 1, // Obtener el id del usaurio logeado
+                nombre_notas: this.nombre_notas,
+                contenido_nota: this.contenido_nota,
+                fecha_nota: this.fecha_nota,
+                completa_check_nota: this.completa_check_nota
+            };
+            try {
+                const notaCreada = await createNota(nuevaNota);
+                console.log('Nota creada:', notaCreada);
+            } catch (error) {
+                console.error('Error al crear la nota:', error);
+            }
         }
     }
 };
