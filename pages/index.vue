@@ -14,8 +14,9 @@
         max-width="500">
         <v-card-title class="text-h4 font-weight-bold text-uppercase">
           Login
+          <svg-icon class="large-icon" type="mdi" :path="path"></svg-icon>
         </v-card-title>
-        <svg-icon type="mdi" :path="path"></svg-icon>
+        
       </v-card>
     </div>
 
@@ -31,16 +32,7 @@
       <div
         class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between"
       >
-        Contraseña
-
-        <a
-          class="text-caption text-decoration-none custom-text-color"
-          href="#"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          Olvidaste la contraseña?</a
-        >
+        Contraseña        
       </div>
 
       <v-text-field
@@ -78,11 +70,16 @@
 </template>
 
 <style scoped>
+.large-icon {
+  margin-top: 1px;
+  width: 35px;
+  height: 35px;
+}
 .custom-text-color {
   color: #e29818ff;
 }
 .background {
-  background-color: #fff1d95a; /* Cambia este color al que prefieras */
+  background-color: #fff1d95a;
   min-height: 100vh;
   display: flex;
   justify-content: center;

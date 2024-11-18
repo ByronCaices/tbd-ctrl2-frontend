@@ -19,10 +19,21 @@
           <svg-icon type="mdi" :path="path"></svg-icon>
         </v-card>
       </div>
+
+        <div class="text-subtitle-1 text-medium-emphasis">Nombre</div>
+    
+          <v-text-field
+            v-model="name"
+            density="compact"
+            placeholder="Nombre"
+            prepend-inner-icon="mdi-account-outline"
+            variant="outlined"
+          ></v-text-field>
   
         <div class="text-subtitle-1 text-medium-emphasis">Correo</div>
   
         <v-text-field
+          v-model="email"
           density="compact"
           placeholder="ejemplo@correo.com"
           prepend-inner-icon="mdi-email-outline"
@@ -88,7 +99,7 @@
     color: rgb(215, 170, 21);
   }
   .background {
-    background-color: #fff1d95a; /* Cambia este color al que prefieras */
+    background-color: #fff1d95a; 
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -100,28 +111,47 @@
 import { ref } from 'vue'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
+import { useUsuarioService } from '@/services/usuarioService'
 
 export default {
   name: "loginView",
   setup() {
     const router = useRouter()
     const visible = ref(false)
+    const name = ref('')
+    const email = ref('')
     const password = ref('')
     const confirmPassword = ref('')
     const errorMessage = ref('')
+    const { createUsuario } = useUsuarioService()
 
-    const register = () => {
+    const register = async () => {
       if (password.value !== confirmPassword.value) {
         errorMessage.value = 'Las contraseñas no coinciden'
+        return
       }
       if (password.value.length < 8) {
         errorMessage.value = 'La contraseña debe tener al menos 8 caracteres'
-        // Proceed with registration logic
+        return
+      }
+      try {
+        const newUser = {
+          //Habria que agregar id?¿
+          nombre: name.value,
+          email: email.value,
+          contrasena: password.value
+        }
+        await createUsuario(newUser)
+        router.push('/') 
+      } catch (error) {
+        errorMessage.value = 'Error al registrar el usuario'
       }
     }
 
     return { 
       visible,
+      name,
+      email,
       password,
       confirmPassword,
       errorMessage,
