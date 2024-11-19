@@ -4,7 +4,7 @@
         <form @submit.prevent="submitForm">
             <div>
                 <label for="nombre_notas">Nombre:</label>
-                <input type="text" id="nombre_notas" v-model="nombre_notas" required>
+                <input type="text" id="nombre_notas" v-model="nombre_nota" required>
             </div>
             <div>
                 <label for="contenido_nota">Descripción:</label>
