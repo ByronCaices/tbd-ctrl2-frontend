@@ -46,7 +46,7 @@ export const useNotaService = () => {
   const getNotaById = async (id: number, token: String): Promise<Nota> => {
     try {
       const { data } = await $axiosService.get<Nota>(
-        `/api/nota/id-usuario/${id}`,
+        `/api/nota/id-nota/${id}`, // Cambiado de /api/nota/id-usuario/${id}
         {
           headers: {
             Authorization: `Bearer ${token}`,

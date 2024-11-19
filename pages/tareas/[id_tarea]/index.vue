@@ -1,42 +1,91 @@
 <template>
+    <Header/>
     <div class="agregar-tarea">
-        <h1>Agregar Tarea</h1>
-        <form @submit.prevent="submitForm">
+        <h1>Editar Tarea</h1>
+        <form @submit.prevent="handleSubmit">
             <div>
                 <label for="nombre">Nombre:</label>
-                <input type="text" id="nombre" v-model="nombre" required>
+                <input type="text" id="nombre" v-model="nombre_nota" required>
             </div>
             <div>
                 <label for="descripcion">Descripción:</label>
-                <textarea id="descripcion" v-model="descripcion" required></textarea>
+                <textarea id="descripcion" v-model="contenido_nota" required></textarea>
             </div>
             <div>
                 <label for="fecha">Fecha de Termino:</label>
-                <input type="date" id="fecha" v-model="fecha" required>
+                <input type="date" id="fecha" v-model="fecha_nota" required>
             </div>
-            <button type="submit">Agregar Tarea</button>
+            <button type="submit">Guardar Cambios</button>
         </form>
     </div>
 </template>
 
 <script>
-export default {
+import { ref, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useNotaService } from '~/services/notaService';
+import Header from "@/components/Header.vue"; // Ajusta la ruta según tu estructura de archivos
+
+
+export default{
+    components: {
+        Header,
+    },
     data() {
         return {
-            nombre: '',
-            descripcion: '',
-            fecha: ''
+            nombre_nota: '',
+            contenido_nota: '',
+            fecha_nota: '',
+            completa_check_nota: false,
+            id_nota: null,
         };
+    },  
+    async created() {
+        const route = useRoute();
+        
+        const { getNotaById } = useNotaService();
+        
+        try {
+            const token = localStorage.getItem("refresh_token");
+            const nota = await getNotaById(Number(route.params.id_tarea), token);
+            this.nombre_nota = nota.nombre_nota;
+            this.contenido_nota = nota.contenido_nota;
+            this.fecha_nota = nota.fecha_nota;
+            this.completa_check_nota = nota.completa_check_nota;
+            this.id_nota = nota.id_nota;
+        } catch (error) {
+            console.error('Error al cargar la nota:', error);
+        }
     },
     methods: {
-        submitForm() {
-            // Aquí puedes manejar el envío del formulario
-            console.log('Nombre:', this.nombre);
-            console.log('Descripción:', this.descripcion);
-            console.log('Fecha de Termino:', this.fecha);
-        }
+        async handleSubmit() {
+            console.log('Nombre:', this.nombre_nota);
+            console.log('Descripción:', this.contenido_nota);
+            console.log('Fecha de Termino:', this.fecha_nota);
+            console.log('Completada:', this.completa_check_nota);
+            console.log('ID:', this.id_nota);
+            const token = localStorage.getItem("refresh_token");
+            console.log('Token:', token);
+            const { updateNota } = useNotaService();
+            const notaActualizada = {
+                id_nota: this.id_nota,
+                nombre_nota: this.nombre_nota,
+                contenido_nota: this.contenido_nota,
+                fecha_nota: this.fecha_nota,
+                completa_check_nota: this.completa_check_nota,
+                id_usuario: localStorage.getItem("id_usuario"),
+            };
+
+            try{
+                await updateNota(notaActualizada, token);
+                console.log('Nota actualizada:', notaActualizada);
+                this.$router.push('/tareas');
+            } catch (error) {
+                console.error('Error al actualizar la nota:', error);
+            }
+        },
     }
-};
+}
 </script>
 
 <style scoped>
