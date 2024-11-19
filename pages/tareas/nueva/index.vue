@@ -1,4 +1,7 @@
 <template>
+
+    <Header/>
+    
     <div class="agregar-tarea">
         <h1>Agregar Tarea</h1>
         <form @submit.prevent="submitForm">
@@ -22,8 +25,14 @@
 
 <script>
 import { useNotaService } from '~/services/notaService';
+import Header from "@/components/Header.vue"; // Ajusta la ruta según tu estructura de archivos
 
 export default {
+
+    components: {
+        Header,
+    },
+
     data() {
         return {
             nombre_nota: '',
