@@ -1,4 +1,5 @@
 <template >
+ 
   <div class="background">
     <v-card
       class="mx-auto pa-12 pb-8 mt-16 position-relative"
