@@ -1,7 +1,7 @@
 <template>
-  <div>
+
     <Header />
-  </div>
+
   <div class="background">
     <!-- Encabezado con botones de notificaciones y cerrar sesión -->
     <header>
@@ -17,44 +17,7 @@
       </nav>
     </header>
 
-    <!-- Sección de búsqueda y filtros -->
-    <div class="search-section pa-4">
-      <v-row>
-        <v-col cols="12" sm="4">
-          <v-text-field
-            v-model="searchParams.nombre_nota"
-            label="Buscar por nombre"
-            outlined
-            dense
-          ></v-text-field>
-        </v-col>
-        <v-col cols="12" sm="4">
-          <v-text-field
-            v-model="searchParams.contenido_nota"
-            label="Buscar por contenido"
-            outlined
-            dense
-          ></v-text-field>
-        </v-col>
-        <v-col cols="12" sm="2">
-          <v-select
-            v-model="searchParams.completa_check_nota"
-            :items="estadoOptions"
-            label="Estado"
-            outlined
-            dense
-          ></v-select>
-        </v-col>
-        <v-col cols="12" sm="2" class="d-flex align-center">
-          <v-btn color="#e29818ff" @click="realizarBusqueda" class="mx-2">
-            Buscar
-          </v-btn>
-          <v-btn color="grey" @click="limpiarFiltros" class="mx-2">
-            Limpiar
-          </v-btn>
-        </v-col>
-      </v-row>
-    </div>
+    <h1>Tareas</h1>
 
     <!-- Botón para añadir tareas -->
     <div class="boton-tareas">
@@ -64,16 +27,35 @@
     </div>
 
     <!-- Lista de tareas -->
+    <v-container>
+      <!-- Control de filtro -->
+      
+      <v-select clearable chips v-model="filtro" :items="['todas', 'pendientes', 'completadas']" label="Mostrar tareas" variant="outlined" class="mb-4" />
+
+      <v-row>
+        <v-col v-for="(tarea, index) in tareasFiltradas" :key="index" cols="12" sm="6" md="4">
+          <v-card :title="tarea.nombre_nota" variant="tonal" :color="tarea.completa_check_nota ? 'green' : 'red'">
+            <v-card-subtitle>Deadline: {{ tarea.fecha_nota }}</v-card-subtitle>
+            <v-card-text>
+              {{ tarea.contenido_nota }}
+            </v-card-text>
+            <v-card-actions>
+              <v-btn prepend-icon="$vuetify" variant="tonal">
+                Click Me
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+
+
+
     <div class="tareas">
-      <h1>Tareas</h1>
       <v-list>
         <v-list-item v-for="(nota, index) in notas" :key="index" class="d-flex align-center justify-space-between">
-          <v-card
-            class="mx-auto pa-4 mt-2 mb-3"
-            elevation="8"
-            rounded="lg"
-            :color="nota.completa_check_nota ? '#e8f5e9' : '#ffebee'"
-          >
+          <v-card class="mx-auto pa-4 mt-2 mb-3" elevation="8" rounded="lg"
+            :color="nota.completa_check_nota ? '#e8f5e9' : '#ffebee'">
             <div class="d-flex justify-between">
               <div>
                 <div class="font-weight-bold">{{ nota.nombre_notas }}</div>
@@ -88,25 +70,13 @@
             </div>
             <v-spacer></v-spacer>
             <div class="boton-editar-eliminar d-flex justify-between mt-4">
-              <v-btn
-                class="mx-2 px-4"
-                color="#E29818FF"
-                size="small"
-                outlined
-                @click="completarTarea(index)"
-              >
+              <v-btn class="mx-2 px-4" color="#E29818FF" size="small" outlined @click="completarTarea(index)">
                 Completar tarea
               </v-btn>
               <v-btn class="mx-2 px-4" color="#E29818FF" size="small" outlined @click="editarTarea(index)">
                 Editar tarea
               </v-btn>
-              <v-btn
-                class="mx-2"
-                color="red darken-1"
-                size="small"
-                outlined
-                @click="eliminarTarea(index)"
-              >
+              <v-btn class="mx-2" color="red darken-1" size="small" outlined @click="eliminarTarea(index)">
                 Eliminar tarea
               </v-btn>
             </div>
@@ -144,14 +114,27 @@ export default {
       ],
       refreshToken: null,
       id_usuario: null,
+      filtro: "todas",
     };
   },
+  computed: {
+    tareasFiltradas() {
+      if (this.filtro === 'todas') {
+        return this.tareas;
+      } else if (this.filtro === 'pendientes') {
+        return this.tareas.filter(tarea => !tarea.completa_check_nota);
+      } else if (this.filtro === 'completadas') {
+        return this.tareas.filter(tarea => tarea.completa_check_nota);
+      }
+    },
+  },
+
   mounted() {
     // Obtener valores del localStorage al montar el componente
     this.refreshToken = localStorage.getItem("refreshToken") || localStorage.getItem("refresh_token");
     this.id_usuario = localStorage.getItem("id_usuario");
     this.searchParams.id_usuario = this.id_usuario;
-    
+
     this.refreshToken = localStorage.getItem('refresh_token');
     this.userId = parseInt(localStorage.getItem('id_usuario'), 10);
 
@@ -235,81 +218,81 @@ export default {
 </script>
 
 
-  
-  <style scoped>
-  .background {
-    background-color: #ffffff;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  header h1 {
-    margin-left: 20px;
-    margin-top: 20px;
-    font-size: 2.25rem;
-    font-weight: bold;
-    text-transform: uppercase;
-  }
-  
-  nav {
-    display: flex;
-    height: 50px;
-    gap: 10px;
-    margin-top: 15px;
-    margin-right: 20px;
-  }
-  
-  .img-notif {
-    width: 20px;
-    height: 20px;
-    margin-right: 5px;
-  }
-  
-  .boton-tareas {
-    display: flex;
-    justify-content: center;
-    margin-right: 20px;
-    margin-top: 20px;
-  }
-  
-  .boton-chico {
-    font-size: 14px;
-    padding: 6px 12px;
-    min-width: 100px;
-    text-transform: uppercase;
-  }
-  
-  .tareas {
-    padding: 20px;
-  }
-  
-  .tareas h1 {
-    font-size: 24px;
-    margin-bottom: 10px;
-  }
-  
-  .COMPLETADO {
-    background-color: #e8f5e9;
-    border-left: 4px solid #4caf50;
-  }
-  
-  .PENDIENTE {
-    background-color: #ffebee;
-    border-left: 4px solid #f44336;
-  }
-  
-  .boton-editar-eliminar {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-  }
 
-  .search-section {
-    width: 100%;
-    max-width: 1200px;
-    margin: 20px auto;
-  }
-  </style>
+<style scoped>
+.background {
+  background-color: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+header h1 {
+  margin-left: 20px;
+  margin-top: 20px;
+  font-size: 2.25rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+nav {
+  display: flex;
+  height: 50px;
+  gap: 10px;
+  margin-top: 15px;
+  margin-right: 20px;
+}
+
+.img-notif {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+
+.boton-tareas {
+  display: flex;
+  justify-content: center;
+  margin-right: 20px;
+  margin-top: 20px;
+}
+
+.boton-chico {
+  font-size: 14px;
+  padding: 6px 12px;
+  min-width: 100px;
+  text-transform: uppercase;
+}
+
+.tareas {
+  padding: 20px;
+}
+
+.tareas h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.COMPLETADO {
+  background-color: #e8f5e9;
+  border-left: 4px solid #4caf50;
+}
+
+.PENDIENTE {
+  background-color: #ffebee;
+  border-left: 4px solid #f44336;
+}
+
+.boton-editar-eliminar {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.search-section {
+  width: 100%;
+  max-width: 1200px;
+  margin: 20px auto;
+}
+</style>
