@@ -10,7 +10,7 @@ export const useNotaService = () => {
    * @returns El objeto Nota creada.
    */
   const createNota = async (nota: Nota, token: String): Promise<Nota> => {
-    const { data } = await $axiosService.post<Nota>("/api/notas/", nota, {
+    const { data } = await $axiosService.post<Nota>("/api/nota/", nota, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -51,7 +51,7 @@ export const useNotaService = () => {
   const getNotaById = async (id: number, token: String): Promise<Nota> => {
     try {
       const { data } = await $axiosService.get<Nota>(
-        `/api/notas/id-usuario/${id}`,
+        `/api/nota/id-usuario/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -71,7 +71,7 @@ export const useNotaService = () => {
    * @returns Una lista de todas las notas
    * */
   const getAllNotas = async (token: String): Promise<Nota[]> => {
-    const { data } = await $axiosService.get<Nota[]>("/api/notas/", {
+    const { data } = await $axiosService.get<Nota[]>("/api/nota/", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -118,7 +118,7 @@ export const useNotaService = () => {
     token: String
   ): Promise<Nota[]> => {
     const { data } = await $axiosService.post<Nota[]>(
-      "/api/nota/buscar-tareas",
+      `/api/nota/buscar-tareas`,
       params,
       {
         headers: {
