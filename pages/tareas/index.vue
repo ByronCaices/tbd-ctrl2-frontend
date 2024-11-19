@@ -1,23 +1,9 @@
 <template>
-
-    <Header />
+  <!-- Encabezado con botones de notificaciones y cerrar sesión -->
+  <Header />
 
   <div class="background">
-    <!-- Encabezado con botones de notificaciones y cerrar sesión -->
-    <header>
-      <nav class="d-flex align-center justify-end">
-        <v-btn class="mx-2" color="#E29818FF" size="small" outlined>
-          <img class="img-notif" src="/assets/bell.png" alt="Notificaciones">
-          Notificaciones
-        </v-btn>
-        <v-btn class="mx-2" color="red darken-1" size="small" outlined>
-          <img class="img-notif" src="/assets/logout.png" alt="Notificaciones">
-          Cerrar sesión
-        </v-btn>
-      </nav>
-    </header>
-
-    <h1>Tareas</h1>
+    <h1 class="lexend-deca-title">My To Do List</h1>
 
     <!-- Botón para añadir tareas -->
     <div class="boton-tareas">
@@ -29,8 +15,9 @@
     <!-- Lista de tareas -->
     <v-container>
       <!-- Control de filtro -->
-      
-      <v-select clearable chips v-model="filtro" :items="['todas', 'pendientes', 'completadas']" label="Mostrar tareas" variant="outlined" class="mb-4" />
+
+      <v-select clearable chips v-model="filtro" :items="['todas', 'pendientes', 'completadas']" label="Mostrar tareas"
+        variant="outlined" class="mb-4" />
 
       <v-row>
         <v-col v-for="(tarea, index) in tareasFiltradas" :key="index" cols="12" sm="6" md="4">
@@ -85,6 +72,7 @@
       </v-list>
     </div>
   </div>
+
 </template>
 
 <script>
@@ -99,6 +87,7 @@ export default {
   },
   data() {
     return {
+
       notas: [],
       token: "your-token-here", // Puedes obtenerlo de localStorage si es necesario
       searchParams: {
@@ -131,34 +120,17 @@ export default {
 
   mounted() {
     // Obtener valores del localStorage al montar el componente
-    this.refreshToken = localStorage.getItem("refreshToken") || localStorage.getItem("refresh_token");
-    this.id_usuario = localStorage.getItem("id_usuario");
-    this.searchParams.id_usuario = this.id_usuario;
-
     this.refreshToken = localStorage.getItem('refresh_token');
     this.userId = parseInt(localStorage.getItem('id_usuario'), 10);
 
-    if (!this.refreshToken || !this.id_usuario) {
+    if (!this.refreshToken || !this.userId) {
       console.error("Token de refresco o ID de usuario no disponibles");
       // Maneja el error, por ejemplo, redirigiendo al login
       return;
     }
-
     this.fetchTareasByUser(); // Cargar tareas del usuario
-
-    this.realizarBusqueda(); // Cargar tareas iniciales
   },
   methods: {
-    async realizarBusqueda() {
-      try {
-        const { buscarTareas } = useNotaService();
-        const results = await buscarTareas(this.searchParams, this.refreshToken);
-        this.notas = results;
-      } catch (error) {
-        console.error("Error al buscar tareas:", error);
-      }
-    },
-
     async fetchTareasByUser() {
       try {
         const { getNotasByUserId } = useNotaService();
@@ -172,28 +144,7 @@ export default {
         console.error('Error al obtener las notas:', error);
       }
       console.log('Tareas:', this.tareas);
-    },
-
-    limpiarFiltros() {
-      this.searchParams = {
-        nombre_nota: "",
-        contenido_nota: "",
-        completa_check_nota: null,
-        id_usuario: this.id_usuario,
-      };
-      this.realizarBusqueda();
-    },
-    eliminarTarea(index) {
-      const { deleteNota } = useNotaService();
-      deleteNota(this.notas[index].id, this.refreshToken)
-        .then(() => {
-          // Elimina la nota de la lista local
-          this.notas.splice(index, 1);
-        })
-        .catch((error) => {
-          console.error("Error al eliminar la tarea:", error);
-        });
-    },
+    },    
     irAAñadir() {
       this.$router.push("/tareas/nueva");
     },
@@ -223,11 +174,13 @@ export default {
 .background {
   background-color: #ffffff;
   min-height: 100vh;
+  margin-top: 40px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  align-items: center; /* Centra horizontalmente */
+  justify-content: flex-start; /* No centra verticalmente, coloca los elementos al inicio */
 }
+
 
 header h1 {
   margin-left: 20px;
@@ -294,5 +247,14 @@ nav {
   width: 100%;
   max-width: 1200px;
   margin: 20px auto;
+}
+
+.lexend-deca-title {
+  font-family: "Lexend Deca", sans-serif;
+  font-optical-sizing: auto;
+  color: #4CAF50;
+  font-weight: 700;
+  font-size: 4.25rem;
+  font-style: normal;
 }
 </style>

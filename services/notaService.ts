@@ -27,9 +27,6 @@ export const useNotaService = () => {
     id: number,
     token: String
   ): Promise<Nota[]> => {
-    console.log("-----------------");
-    console.log(token);
-    console.log("-----------------.");
     const { data } = await $axiosService.get<Nota[]>(
       `/api/nota/notas-usuario/${id}`,
       {
@@ -38,8 +35,6 @@ export const useNotaService = () => {
         },
       }
     );
-    console.log("############");
-    console.log(token);
     return data;
   };
 

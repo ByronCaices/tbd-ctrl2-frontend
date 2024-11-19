@@ -1,8 +1,24 @@
-// nuxt.config.js
-import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
+import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
+
 export default defineNuxtConfig({
-  modules: ["@pinia/nuxt", "nuxt-security"],
-  plugins: ["~/plugins/axios.client.ts", "~/plugins/toastification.js"], // Agrega tu nuevo plugin aquí
+  modules: [
+    "@pinia/nuxt",
+    "nuxt-security",
+    "@nuxtjs/google-fonts", // Agrega el módulo de Google Fonts aquí
+    (_options, nuxt) => {
+      nuxt.hooks.hook("vite:extendConfig", (config) => {
+        // @ts-expect-error
+        config.plugins.push(vuetify({ autoImport: true }));
+      });
+    },
+  ],
+  googleFonts: {
+    families: {
+      "Lexend Deca": [100, 400, 700, 900], // Especifica los pesos necesarios
+    },
+    display: "swap", // Define cómo se muestra la fuente mientras se carga
+  },
+  plugins: ["~/plugins/axios.client.ts", "~/plugins/toastification.js"],
   runtimeConfig: {
     public: {
       backBaseUrl: process.env.BACK_BASE_URL,
@@ -14,17 +30,8 @@ export default defineNuxtConfig({
   },
   compatibilityDate: "2024-10-23",
   build: {
-    transpile: ['vuetify'],
+    transpile: ["vuetify"],
   },
-  modules: [
-    (_options, nuxt) => {
-      nuxt.hooks.hook('vite:extendConfig', (config) => {
-        // @ts-expect-error
-        config.plugins.push(vuetify({ autoImport: true }))
-      })
-    },
-    //...
-  ],
   vite: {
     vue: {
       template: {

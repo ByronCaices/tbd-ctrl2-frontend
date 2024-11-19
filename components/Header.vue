@@ -1,192 +1,132 @@
 <template>
-  <header class="header">
-      <div class="header-left">
-          <!-- Logo -->
-          <div class="logo">
-              <img src="@/assets/logo.png" alt="Logo">
-          </div>
+  <v-card>
+    <v-toolbar color="#4CAF50">
+      <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
-          <!-- Menú de navegación -->
-          <nav class="menu">
-              <ul>
-                  <li><a href="/">EDITAR ESTE HEADER</a></li>
-                  <li><a href="/facturas">Facturas</a></li>
-                  <li><a href="#">Contabilidad</a></li>
-                  <li><a href="#">Informes</a></li>
-                  <li><a href="#">Configuración</a></li>
-                  <li><a href="/empleados">Empleados</a></li>
-              </ul>
-          </nav>
-      </div>
+      <v-toolbar-title >Your Dashboard</v-toolbar-title>
 
-      <div class="header-right">
-          <!-- Campo de búsqueda -->
-          <div class="search-bar" @click="toggleSearch">
-              <input v-if="searchActive" type="text" placeholder="Buscar..." ref="searchInput" class="search-input">
-              <button class="search-icon" v-else>
-                  <img src="@/assets/magnifying-glass.png" alt="Buscar" class="icon-size">
-              </button>
-          </div>
+      <v-spacer></v-spacer>
 
-          <!-- Iconos y botones -->
-          <div class="header-icons">
-              <button class="btn-user" @click="toggleUserMenu">
-                  <img src="@/assets/usuario.png">
-              </button>
-              <div v-if="userMenuActive" class="user-menu">
-                  <ul>
-                      <li><a href="#">Perfil</a></li>
-                      <li><a href="#">Ajustes</a></li>
-                      <li><a href="#">Cerrar sesión</a></li>
-                  </ul>
-              </div>
-          </div>
-      </div>
-  </header>
+      <v-btn icon="mdi-magnify"></v-btn>
+
+      <v-btn icon="mdi-dots-vertical"></v-btn>
+
+      <v-btn class="mx-2" size="small" outlined>
+        <img class="img-notif" src="/assets/bell.png" alt="Notificaciones">
+        Notificaciones
+      </v-btn>
+
+      <v-btn class="mx-2" size="small" outlined>
+        <img class="img-notif" src="/assets/logout.png" alt="Notificaciones">
+        Cerrar sesión
+      </v-btn>
+    </v-toolbar>
+  </v-card>
 </template>
 
 <script>
 export default {
-data() {
-  return {
-    searchActive: false,
-    userMenuActive: false,
-  };
-},
-methods: {
-  toggleSearch() {
-    this.searchActive = !this.searchActive;
-    if (this.searchActive) {
-      this.$nextTick(() => {
-        this.$refs.searchInput.focus();
-      });
-    }
+  data() {
+    return {
+      searchActive: false,
+      userMenuActive: false,
+    };
   },
-  toggleUserMenu() {
-    this.userMenuActive = !this.userMenuActive;
+  methods: {
+    toggleSearch() {
+      this.searchActive = !this.searchActive;
+      if (this.searchActive) {
+        this.$nextTick(() => {
+          this.$refs.searchInput.focus();
+        });
+      }
+    },
+    toggleUserMenu() {
+      this.userMenuActive = !this.userMenuActive;
+    }
   }
-}
 };
 </script>
 
 <style scoped>
-.header {
+.background {
+  background-color: #ffffff;
+  min-height: 100vh;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
-  padding: 10px;
-  background-color: white;
-  border-bottom: 1px solid #E0E0E0;
+  justify-content: center;
 }
 
-.header-left {
+header h1 {
+  margin-left: 20px;
+  margin-top: 20px;
+  font-size: 2.25rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+nav {
   display: flex;
-  align-items: center;
-}
-
-.logo img {
-  height: 40px;
-}
-
-.menu ul {
-  display: flex;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.menu ul li {
-  margin: 0 15px;
-}
-
-.menu ul li a {
-  text-decoration: none;
-  color: #333;
-  font-weight: 600;
-  transition: color 0.3s ease;
-  font-family: 'Roboto', sans-serif; /* Asignar la fuente aquí */
-}
-
-.menu ul li a:hover {
-  color: #FF6F61;
-  font-family: 'Roboto', sans-serif;
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
-}
-
-.search-bar {
-  position: relative;
+  height: 50px;
+  gap: 10px;
+  margin-top: 15px;
   margin-right: 20px;
 }
 
-.search-bar input {
-  padding: 8px 12px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  transition: width 0.4s ease;
-}
-
-.search-input {
-  width: 200px;
-}
-
-.search-icon {
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-.icon-size {
+.img-notif {
   width: 20px;
-  height: 20px; /* Ajuste del tamaño del icono de búsqueda */
+  height: 20px;
+  margin-right: 5px;
 }
 
-.header-icons {
+.boton-tareas {
   display: flex;
-  align-items: center;
+  justify-content: center;
+  margin-right: 20px;
+  margin-top: 20px;
 }
 
-.header-icons button {
-  background: none;
-  border: none;
-  margin-left: 10px;
-  cursor: pointer;
+.boton-chico {
+  font-size: 14px;
+  padding: 6px 12px;
+  min-width: 100px;
+  text-transform: uppercase;
 }
 
-.btn-user img {
-  height: 24px;
+.tareas {
+  padding: 20px;
 }
 
-.user-menu {
-  position: absolute;
-  top: 50px;
-  right: 10px;
-  background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.tareas h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
 }
 
-.user-menu ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.COMPLETADO {
+  background-color: #e8f5e9;
+  border-left: 4px solid #4caf50;
 }
 
-.user-menu ul li {
-  margin: 10px 0;
+.PENDIENTE {
+  background-color: #ffebee;
+  border-left: 4px solid #f44336;
 }
 
-.user-menu ul li a {
-  text-decoration: none;
-  color: #333;
+.boton-editar-eliminar {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
 }
 
-.user-menu ul li a:hover {
-  color: #FF6F61;
+.search-section {
+  width: 100%;
+  max-width: 1200px;
+  margin: 20px auto;
+}
+
+.lexend-deca-title {
+  font-family: "Lexend Deca", sans-serif;
+  font-weight: 400;
 }
 </style>
