@@ -10,12 +10,8 @@ export const useUsuarioService = () => {
      * @param token - Token de autenticación.
      * @returns El objeto Usuario creado.
      */
-    const createUsuario = async (usuario: Usuario, token: string): Promise<Usuario> => {
-        const { data } = await $axiosService.post<Usuario>('/api/usuario/', usuario, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
+    const createUsuario = async (usuario: Usuario): Promise<Usuario> => {
+        const { data } = await $axiosService.post<Usuario>('/api/usuario/register', usuario);
         return data;
     };
 
@@ -27,7 +23,7 @@ export const useUsuarioService = () => {
      */
     const getUsuarioById = async (id: number, token: string): Promise<Usuario> => {
         try {
-            const { data } = await $axiosService.get<Usuario>(`/api/usuario/${id}`, {
+            const { data } = await $axiosService.get<Usuario>(`/api/usuario/id-usuario/${id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

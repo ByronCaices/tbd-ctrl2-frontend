@@ -15,9 +15,9 @@ export const useAuthService = () => {
      * @param password - Contraseña del usuario.
      * @returns El objeto con el token de autenticación y el refresh token.
      */
-    const authenticate = async (email: string, password: string): Promise<TokenResponse> => {
+    const authenticate = async (username: string, password: string): Promise<TokenResponse> => {
         const { data } = await $axiosService.post<TokenResponse>("/api/auth/login", {
-            email,
+            username,
             password
         });
         return data;

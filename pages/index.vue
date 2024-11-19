@@ -91,48 +91,36 @@
 import SvgIcon from '@jamescoyle/vue-icon';
 import { mdiAccountCircleOutline } from '@mdi/js';
 import { useAuthService } from '~/services/authService';
-import { useRouter } from 'vue-router';
-import { ref, onMounted} from 'vue';
 
 export default {
-  name: "my-component",
+  name: 'my-component',
   components: {
-    SvgIcon
+    SvgIcon,
   },
-  data: () => ({
-    visible: false,
-    path: mdiAccountCircleOutline,
-  }),
-
-  setup() {
-    const router = useRouter();
-    const visible = ref(false);
-    const email = ref('');
-    const password = ref('');
-    const errorMessage = ref('');
-    const { authenticate } = useAuthService();
-
-    const logueo = async () => {
-      try {
-        const { accessToken, refreshToken, id_usuario } = await authenticate(email.value, password.value);
-        onMounted(() => {
-          localStorage.setItem('accessToken', accessToken);
-          localStorage.setItem('refreshToken', refreshToken);
-          localStorage.setItem('id_usuario', id_usuario);
-        });
-        router.push('/tareas');
-      } catch (error) {
-        errorMessage.value = 'Credenciales incorrectas';
-      }
-    };
-
+  data() {
     return {
-      email,
-      password,
-      visible,
-      errorMessage,
-      logueo
+      visible: false,
+      path: mdiAccountCircleOutline,
+      email: '',
+      password: '',
+      errorMessage: '',
     };
-  }
+  },
+  methods: {
+    async logueo() {
+      try {
+        const authService = useAuthService();
+        const { access_token, refresh_token, id_usuario } = await authService.authenticate(this.email, this.password);
+
+        localStorage.setItem('access_token', access_token);
+        localStorage.setItem('refresh_token', refresh_token);
+        localStorage.setItem('id_usuario', id_usuario);
+
+        this.$router.push('/tareas');
+      } catch (error) {
+        this.errorMessage = 'Credenciales incorrectas';
+      }
+    },
+  },
 };
 </script>
