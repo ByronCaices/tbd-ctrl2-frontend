@@ -7,22 +7,22 @@
       rounded="lg"
       color=""
     >
-    <div class="text-center my-8">
-      <v-card flat 
-        class="elevation-6 pa-4" 
-        color="#FAE5C4ff"
-        max-width="500">
-        <v-card-title class="text-h4 font-weight-bold text-uppercase">
-          Login
-          <svg-icon class="large-icon" type="mdi" :path="path"></svg-icon>
-        </v-card-title>
-        
-      </v-card>
-    </div>
+      <div class="text-center my-8">
+        <v-card flat 
+          class="elevation-6 pa-4" 
+          color="#FAE5C4ff"
+          max-width="500">
+          <v-card-title class="text-h4 font-weight-bold text-uppercase">
+            Login
+            <svg-icon class="large-icon" type="mdi" :path="path"></svg-icon>
+          </v-card-title>
+        </v-card>
+      </div>
 
       <div class="text-subtitle-1 text-medium-emphasis">Cuenta</div>
 
       <v-text-field
+        v-model="email"
         density="compact"
         placeholder="ejemplo@corre.com"
         prepend-inner-icon="mdi-email-outline"
@@ -36,6 +36,7 @@
       </div>
 
       <v-text-field
+        v-model="password"
         :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
         :type="visible ? 'text' : 'password'"
         density="compact"
@@ -51,7 +52,7 @@
         </v-card-text>
       </v-card>
 
-      <v-btn class="mb-8" color="#e29818ff" size="large" variant="tonal" block>
+      <v-btn class="mb-8" color="#e29818ff" size="large" variant="tonal" block @click="logueo">
         Ingresar
       </v-btn>
 
@@ -60,7 +61,6 @@
           class="register text-darken-1 text-decoration-none custom-text-color"
           to="/registro"
           rel="noopener noreferrer"
-          target="_blank"
         >
           Registrate ahora <v-icon icon="mdi-chevron-right"></v-icon>
         </nuxt-link>
@@ -90,15 +90,46 @@
 <script>
 import SvgIcon from '@jamescoyle/vue-icon';
 import { mdiAccountCircleOutline } from '@mdi/js';
+import { useAuthService } from '~/services/authService';
+import { useRouter } from 'vue-router';
+import { ref } from 'vue';
 
-  export default {
-    name: "my-component",
-    components: {
+export default {
+  name: "my-component",
+  components: {
     SvgIcon
-    },
-    data: () => ({
-      visible: false,
-      path: mdiAccountCircleOutline,
-    }),
+  },
+  data: () => ({
+    visible: false,
+    path: mdiAccountCircleOutline,
+  }),
+
+  setup() {
+    const router = useRouter();
+    const visible = ref(false);
+    const email = ref('');
+    const password = ref('');
+    const errorMessage = ref('');
+    const { authenticate } = useAuthService();
+
+    const logueo = async () => {
+      try {
+        const { accessToken, refreshToken } = await authenticate(email.value, password.value);
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
+        router.push('/tareas');
+      } catch (error) {
+        errorMessage.value = 'Credenciales incorrectas';
+      }
+    };
+
+    return {
+      email,
+      password,
+      visible,
+      errorMessage,
+      logueo
+    };
   }
+};
 </script>

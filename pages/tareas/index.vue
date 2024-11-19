@@ -143,11 +143,12 @@
       };
     },
     setup() {
+      const refreshToken = ref(localStorage.getItem('refreshToken'));
       const router = useRouter();
       const { updateNota, deleteNota } = useNotaService();
       
       const eliminarTarea = (index) => {
-        deleteNota(this.notas[index].id, this.token);
+        deleteNota(this.notas[index].id, refreshToken);
       };
 
       const irAAñadir = () => {
@@ -156,7 +157,7 @@
   
       const completarTarea = (index) => {
         this.notas[index].completa_check_nota = true;
-        updateNota(this.notas[index], this.token);
+        updateNota(this.notas[index], refreshToken);
 
       };
   
