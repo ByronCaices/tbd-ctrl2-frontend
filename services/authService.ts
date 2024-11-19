@@ -6,10 +6,11 @@ export const useAuthService = () => {
     interface TokenResponse {
         accessToken: string;
         refreshToken: string;
+        id_usuario: number;
     }
 
     /**
-     * Autentica un usuario.
+     * Autentiaca un usuario.
      * @param email - Correo del usuario.
      * @param password - Contraseña del usuario.
      * @returns El objeto con el token de autenticación y el refresh token.
