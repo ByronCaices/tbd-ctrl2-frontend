@@ -139,15 +139,15 @@
             completa_check_nota: true,
           },
         ],
+        token: 'your-token-here' // Add your token here
       };
     },
     setup() {
       const router = useRouter();
-      const {updateNota} = useNotaService();
-      const {deleteNota} = useNotaService();
+      const { updateNota, deleteNota } = useNotaService();
       
       const eliminarTarea = (index) => {
-        deleteNota(this.notas[index].id);
+        deleteNota(this.notas[index].id, this.token);
       };
 
       const irAAñadir = () => {
@@ -156,7 +156,7 @@
   
       const completarTarea = (index) => {
         this.notas[index].completa_check_nota = true;
-        updateNota(this.notas[index]);
+        updateNota(this.notas[index], this.token);
 
       };
   
