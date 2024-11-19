@@ -20,20 +20,59 @@
         variant="outlined" class="mb-4" />
 
       <v-row>
-        <v-col v-for="(tarea, index) in tareasFiltradas" :key="index" cols="12" sm="6" md="4">
+        <v-col v-for="tarea in tareasFiltradas" :key="tarea.id_nota" cols="12" sm="6" md="4">
           <v-card :title="tarea.nombre_nota" variant="tonal" :color="tarea.completa_check_nota ? 'green' : 'red'">
             <v-card-subtitle>Deadline: {{ tarea.fecha_nota }}</v-card-subtitle>
             <v-card-text>
               {{ tarea.contenido_nota }}
             </v-card-text>
             <v-card-actions>
-              <v-btn prepend-icon="$vuetify" variant="tonal">
-                Click Me
+              <!-- Botón para marcar como completada o pendiente -->
+              <v-btn icon @click="toggleCompleta(tarea)">
+                <v-icon>{{ tarea.completa_check_nota ? 'mdi-checkbox-marked' : 'mdi-checkbox-blank-outline' }}</v-icon>
+              </v-btn>
+
+              <!-- Botón para editar la tarea -->
+              <v-btn icon @click="editarTarea(tarea)">
+                <v-icon>mdi-pencil</v-icon>
+              </v-btn>
+
+              <!-- Botón para eliminar la tarea -->
+              <v-btn icon @click="deleteTarea(tarea.id_nota)">
+                <v-icon>mdi-delete</v-icon>
               </v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
       </v-row>
+
+      <v-dialog v-model="dialogEditar" max-width="500px">
+        <v-card>
+          <v-card-title>
+            <span class="headline">Editar Tarea</span>
+          </v-card-title>
+          <v-card-text>
+            <v-form ref="formEditar">
+              <v-text-field label="Nombre" v-model="tareaAEditar.nombre_nota"></v-text-field>
+              <v-textarea label="Contenido" v-model="tareaAEditar.contenido_nota"></v-textarea>
+              <v-menu ref="menu" v-model="menu" :close-on-content-click="false" transition="scale-transition" offset-y
+                min-width="290px">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field v-model="tareaAEditar.fecha_nota" label="Fecha" prepend-icon="mdi-calendar" readonly
+                    v-bind="attrs" v-on="on"></v-text-field>
+                </template>
+                <v-date-picker v-model="tareaAEditar.fecha_nota" no-title @input="menu = false"></v-date-picker>
+              </v-menu>
+            </v-form>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="red darken-1" text @click="dialogEditar = false">Cancelar</v-btn>
+            <v-btn color="green darken-1" text @click="guardarEdicion">Guardar</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
     </v-container>
 
 
@@ -104,6 +143,9 @@ export default {
       refreshToken: null,
       id_usuario: null,
       filtro: "todas",
+      dialogEditar: false,
+      tareaAEditar: null,
+      menu: false, // Para el date picker
     };
   },
   computed: {
@@ -144,7 +186,32 @@ export default {
         console.error('Error al obtener las notas:', error);
       }
       console.log('Tareas:', this.tareas);
-    },    
+    },
+    async deleteTarea(id_nota) {
+      // Pregunta mediante notificacion de navegador, está seguro de eliminar la tarea
+      const isConfirmed = window.confirm("¿Estás seguro de eliminar la tarea?");
+      if (!isConfirmed) {
+        return;
+      }
+
+      try {
+        const notaService = useNotaService();
+        console.log('Eliminando tarea con ID:', id_nota);
+        await notaService.deleteNota(id_nota, this.refreshToken);
+        console.log('Tarea eliminada en el backend.');
+
+        // Elimina la tarea de la lista
+        const index = this.tareas.findIndex(t => t.id_nota === id_nota);
+        if (index !== -1) {
+          console.log('Eliminando tarea del frontend en el índice:', index);
+          this.tareas.splice(index, 1);
+          console.log('Tareas actuales:', this.tareas);
+        }
+      } catch (error) {
+        console.error('Error al eliminar la tarea:', error);
+      }
+      window.location.reload();
+    },
     irAAñadir() {
       this.$router.push("/tareas/nueva");
     },
@@ -164,6 +231,39 @@ export default {
       const notaId = this.notas[index].id;
       this.$router.push(`/tareas/editar/${notaId}`);
     },
+    async toggleCompleta(tarea) {
+      try {
+        const notaService = useNotaService();
+        // Invertir el estado de 'completa_check_nota'
+        tarea.completa_check_nota = !tarea.completa_check_nota;
+        // Actualizar la tarea en el backend
+        await notaService.updateNota(tarea, this.refreshToken);
+      } catch (error) {
+        console.error('Error al actualizar el estado de la tarea:', error);
+      }
+    },
+
+    editarTarea(tarea) {
+      // Crear una copia de la tarea para evitar modificarla directamente
+      this.tareaAEditar = { ...tarea };
+      this.dialogEditar = true;
+    },
+
+    async guardarEdicion() {
+      try {
+        const notaService = useNotaService();
+        // Actualizar la tarea en el backend
+        await notaService.updateNota(this.tareaAEditar, this.refreshToken);
+        // Actualizar la tarea en la lista local
+        const index = this.tareas.findIndex(t => t.id_nota === this.tareaAEditar.id_nota);
+        if (index !== -1) {
+          this.tareas.splice(index, 1, this.tareaAEditar);
+        }
+        this.dialogEditar = false;
+      } catch (error) {
+        console.error('Error al guardar la edición:', error);
+      }
+    },
   },
 };
 </script>
@@ -177,8 +277,10 @@ export default {
   margin-top: 40px;
   display: flex;
   flex-direction: column;
-  align-items: center; /* Centra horizontalmente */
-  justify-content: flex-start; /* No centra verticalmente, coloca los elementos al inicio */
+  align-items: center;
+  /* Centra horizontalmente */
+  justify-content: flex-start;
+  /* No centra verticalmente, coloca los elementos al inicio */
 }
 
 

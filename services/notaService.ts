@@ -94,7 +94,7 @@ export const useNotaService = () => {
    * @param id - Id de la nota a eliminar.
    */
   const deleteNota = async (id: number, token: String): Promise<void> => {
-    await $axiosService.delete(`/api/notas/delete-nota/${id}`, {
+    await $axiosService.delete(`/api/nota/delete-nota/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
