@@ -19,6 +19,23 @@ export const useNotaService = () => {
     };
 
 
+    /**
+     * Crea una nueva nota.
+     * @param id - Id del usuario al que pertenece la nota.
+     * @returns El objeto Nota creada.
+     */    
+    const getNotasByUserId = async (id: number, token: String): Promise<Nota[]> => {
+        const { data } = await $axiosService.get<Nota[]>(`/api/notas/id-usuario/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return data;
+    }
+
+
+
+
 
 
     /**
