@@ -92,7 +92,7 @@ import SvgIcon from '@jamescoyle/vue-icon';
 import { mdiAccountCircleOutline } from '@mdi/js';
 import { useAuthService } from '~/services/authService';
 import { useRouter } from 'vue-router';
-import { ref } from 'vue';
+import { ref, onMounted} from 'vue';
 
 export default {
   name: "my-component",
@@ -114,9 +114,12 @@ export default {
 
     const logueo = async () => {
       try {
-        const { accessToken, refreshToken } = await authenticate(email.value, password.value);
-        localStorage.setItem('accessToken', accessToken);
-        localStorage.setItem('refreshToken', refreshToken);
+        const { accessToken, refreshToken, id_usuario } = await authenticate(email.value, password.value);
+        onMounted(() => {
+          localStorage.setItem('accessToken', accessToken);
+          localStorage.setItem('refreshToken', refreshToken);
+          localStorage.setItem('id_usuario', id_usuario);
+        });
         router.push('/tareas');
       } catch (error) {
         errorMessage.value = 'Credenciales incorrectas';

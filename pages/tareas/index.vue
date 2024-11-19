@@ -100,7 +100,7 @@
   </template>
   
   <script>
-  import { ref } from "vue";
+  import { ref, onMounted } from "vue";
   import { useRouter } from "vue-router";
   import { useNotaService } from "~/services/notaService";
 
@@ -143,10 +143,13 @@
       };
     },
     setup() {
-      const refreshToken = ref(localStorage.getItem('refreshToken'));
+      const refreshToken = ref(null);
       const router = useRouter();
       const { updateNota, deleteNota } = useNotaService();
       
+      onMounted(() => {
+        refreshToken.value = localStorage.getItem("refreshToken");
+      });
       const eliminarTarea = (index) => {
         deleteNota(this.notas[index].id, refreshToken);
       };

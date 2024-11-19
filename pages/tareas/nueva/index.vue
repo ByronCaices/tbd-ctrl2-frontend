@@ -40,8 +40,7 @@ export default {
 
             const { createNota } = useNotaService();
             const nuevaNota = {
-                id_nota: 0, //Esto se deberia crear solo
-                id_usuario: 1, // Obtener el id del usaurio logeado
+                id_usuario: localStorage.getItem("id_usuario"), // Obtener el id del usaurio logeado
                 nombre_notas: this.nombre_notas,
                 contenido_nota: this.contenido_nota,
                 fecha_nota: this.fecha_nota,
