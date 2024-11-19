@@ -13,6 +13,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   });
 
   // Interceptor para incluir el token en las solicitudes
+  /*
   instance.interceptors.request.use(
     (config) => {
       const token = 'test_token'; // Aquí podrías usar un token real de tu sistema de autenticación
@@ -25,6 +26,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       return Promise.reject(error);
     }
   );
+  */
 
   // Proveer la instancia de Axios a todo el app
   return {

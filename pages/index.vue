@@ -1,4 +1,5 @@
 <template >
+ 
   <div class="background">
     <v-card
       class="mx-auto pa-12 pb-8 mt-16 position-relative"
@@ -7,22 +8,22 @@
       rounded="lg"
       color=""
     >
-    <div class="text-center my-8">
-      <v-card flat 
-        class="elevation-6 pa-4" 
-        color="#FAE5C4ff"
-        max-width="500">
-        <v-card-title class="text-h4 font-weight-bold text-uppercase">
-          Login
-          <svg-icon class="large-icon" type="mdi" :path="path"></svg-icon>
-        </v-card-title>
-        
-      </v-card>
-    </div>
+      <div class="text-center my-8">
+        <v-card flat 
+          class="elevation-6 pa-4" 
+          color="#FAE5C4ff"
+          max-width="500">
+          <v-card-title class="text-h4 font-weight-bold text-uppercase">
+            Login
+            <svg-icon class="large-icon" type="mdi" :path="path"></svg-icon>
+          </v-card-title>
+        </v-card>
+      </div>
 
       <div class="text-subtitle-1 text-medium-emphasis">Cuenta</div>
 
       <v-text-field
+        v-model="email"
         density="compact"
         placeholder="ejemplo@corre.com"
         prepend-inner-icon="mdi-email-outline"
@@ -36,6 +37,7 @@
       </div>
 
       <v-text-field
+        v-model="password"
         :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
         :type="visible ? 'text' : 'password'"
         density="compact"
@@ -51,7 +53,7 @@
         </v-card-text>
       </v-card>
 
-      <v-btn class="mb-8" color="#e29818ff" size="large" variant="tonal" block>
+      <v-btn class="mb-8" color="#e29818ff" size="large" variant="tonal" block @click="logueo">
         Ingresar
       </v-btn>
 
@@ -60,7 +62,6 @@
           class="register text-darken-1 text-decoration-none custom-text-color"
           to="/registro"
           rel="noopener noreferrer"
-          target="_blank"
         >
           Registrate ahora <v-icon icon="mdi-chevron-right"></v-icon>
         </nuxt-link>
@@ -90,15 +91,37 @@
 <script>
 import SvgIcon from '@jamescoyle/vue-icon';
 import { mdiAccountCircleOutline } from '@mdi/js';
+import { useAuthService } from '~/services/authService';
 
-  export default {
-    name: "my-component",
-    components: {
-    SvgIcon
-    },
-    data: () => ({
+export default {
+  name: 'my-component',
+  components: {
+    SvgIcon,
+  },
+  data() {
+    return {
       visible: false,
       path: mdiAccountCircleOutline,
-    }),
-  }
+      email: '',
+      password: '',
+      errorMessage: '',
+    };
+  },
+  methods: {
+    async logueo() {
+      try {
+        const authService = useAuthService();
+        const { access_token, refresh_token, id_usuario } = await authService.authenticate(this.email, this.password);
+
+        localStorage.setItem('access_token', access_token);
+        localStorage.setItem('refresh_token', refresh_token);
+        localStorage.setItem('id_usuario', id_usuario);
+
+        this.$router.push('/tareas');
+      } catch (error) {
+        this.errorMessage = 'Credenciales incorrectas';
+      }
+    },
+  },
+};
 </script>

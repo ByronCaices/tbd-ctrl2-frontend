@@ -108,55 +108,44 @@
 </style>
 
 <script>
-import { ref } from 'vue'
-import axios from 'axios'
-import { useRouter } from 'vue-router'
 import { useUsuarioService } from '@/services/usuarioService'
 
 export default {
-  name: "loginView",
-  setup() {
-    const router = useRouter()
-    const visible = ref(false)
-    const name = ref('')
-    const email = ref('')
-    const password = ref('')
-    const confirmPassword = ref('')
-    const errorMessage = ref('')
-    const { createUsuario } = useUsuarioService()
-
-    const register = async () => {
-      if (password.value !== confirmPassword.value) {
-        errorMessage.value = 'Las contraseñas no coinciden'
-        return
+  name: 'loginView',
+  data() {
+    return {
+      visible: false,
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      errorMessage: '',
+    };
+  },
+  methods: {
+    async register() {
+      if (this.password !== this.confirmPassword) {
+        this.errorMessage = 'Las contraseñas no coinciden';
+        return;
       }
-      if (password.value.length < 8) {
-        errorMessage.value = 'La contraseña debe tener al menos 8 caracteres'
-        return
+      if (this.password.length < 8) {
+        this.errorMessage = 'La contraseña debe tener al menos 8 caracteres';
+        return;
       }
       try {
         const newUser = {
-          //Habria que agregar id?¿
-          nombre: name.value,
-          email: email.value,
-          contrasena: password.value
-        }
-        await createUsuario(newUser)
-        router.push('/') 
+          nombre: this.name,
+          email: this.email,
+          contrasena: this.password,
+        };
+        const usuarioService = useUsuarioService();
+        console.log(newUser);
+        await usuarioService.createUsuario(newUser);
+        this.$router.push('/');
       } catch (error) {
-        errorMessage.value = 'Error al registrar el usuario'
+        this.errorMessage = 'Error al registrar el usuario';
       }
-    }
-
-    return { 
-      visible,
-      name,
-      email,
-      password,
-      confirmPassword,
-      errorMessage,
-      register,
-    }
-  }
-}
+    },
+  },
+};
 </script>

@@ -1,10 +1,13 @@
 <template>
+
+    <Header/>
+    
     <div class="agregar-tarea">
         <h1>Agregar Tarea</h1>
         <form @submit.prevent="submitForm">
             <div>
                 <label for="nombre_notas">Nombre:</label>
-                <input type="text" id="nombre_notas" v-model="nombre_notas" required>
+                <input type="text" id="nombre_notas" v-model="nombre_nota" required>
             </div>
             <div>
                 <label for="contenido_nota">Descripción:</label>
@@ -15,40 +18,50 @@
                 <input type="date" id="fecha_nota" v-model="fecha_nota" required>
             </div>
             
-            <button type="submit">Agregar Tarea</button>
+            <button type="submit" @click="tareas">Agregar Tarea</button>
         </form>
     </div>
 </template>
 
 <script>
 import { useNotaService } from '~/services/notaService';
+import Header from "@/components/Header.vue"; // Ajusta la ruta según tu estructura de archivos
 
 export default {
+
+    components: {
+        Header,
+    },
+
     data() {
         return {
-            nombre_notas: '',
+            nombre_nota: '',
             contenido_nota: '',
             fecha_nota: '',
             completa_check_nota: false
         };
     },
     methods: {
+        async tareas(){
+            this.$router.push('/tareas');
+        },
         async submitForm() {
-            console.log('Nombre:', this.nombre_notas);
+            console.log('Nombre:', this.nombre_nota);
             console.log('Descripción:', this.contenido_nota);
             console.log('Fecha de Termino:', this.fecha_nota);
-
+            const token= localStorage.getItem("refresh_token");
+            console.log('Token:', token);
             const { createNota } = useNotaService();
             const nuevaNota = {
-                id_nota: 0, //Esto se deberia crear solo
-                id_usuario: 1, // Obtener el id del usaurio logeado
-                nombre_notas: this.nombre_notas,
+                id_usuario: localStorage.getItem("id_usuario"), // Obtener el id del usaurio logeado
+                nombre_nota: this.nombre_nota,
                 contenido_nota: this.contenido_nota,
                 fecha_nota: this.fecha_nota,
                 completa_check_nota: this.completa_check_nota
             };
+
             try {
-                const notaCreada = await createNota(nuevaNota);
+                const notaCreada = await createNota(nuevaNota, token);
                 console.log('Nota creada:', notaCreada);
             } catch (error) {
                 console.error('Error al crear la nota:', error);
