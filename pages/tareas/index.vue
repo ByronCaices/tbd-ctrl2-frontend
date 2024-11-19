@@ -128,6 +128,7 @@ export default {
     return {
 
       notas: [],
+      tareas: [],
       token: "your-token-here", // Puedes obtenerlo de localStorage si es necesario
       searchParams: {
         nombre_nota: "",
@@ -159,7 +160,6 @@ export default {
       }
     },
   },
-
   mounted() {
     // Obtener valores del localStorage al montar el componente
     this.refreshToken = localStorage.getItem('refresh_token');
@@ -210,7 +210,7 @@ export default {
       } catch (error) {
         console.error('Error al eliminar la tarea:', error);
       }
-      window.location.reload();
+      //window.location.reload();
     },
     irAAñadir() {
       this.$router.push("/tareas/nueva");
@@ -241,6 +241,7 @@ export default {
       } catch (error) {
         console.error('Error al actualizar el estado de la tarea:', error);
       }
+      //window.location.reload();
     },
 
     editarTarea(tarea) {
@@ -263,6 +264,7 @@ export default {
       } catch (error) {
         console.error('Error al guardar la edición:', error);
       }
+      //  window.location.reload();
     },
   },
 };
