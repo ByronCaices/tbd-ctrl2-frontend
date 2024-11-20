@@ -3,7 +3,7 @@
     <v-toolbar color="#4CAF50">
       <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
-      <v-toolbar-title >Your Dashboard</v-toolbar-title>
+      <v-toolbar-title>Your Dashboard</v-toolbar-title>
 
       <v-spacer></v-spacer>
 
@@ -16,10 +16,11 @@
         Notificaciones
       </v-btn>
 
-      <v-btn class="mx-2" size="small" outlined>
-        <img class="img-notif" src="/assets/logout.png" alt="Notificaciones">
+      <v-btn class="mx-2" size="small" outlined @click="cerrarSesion">
+        <img class="img-notif" src="/assets/logout.png" alt="Cerrar sesión">
         Cerrar sesión
       </v-btn>
+
     </v-toolbar>
   </v-card>
 </template>
@@ -43,6 +44,12 @@ export default {
     },
     toggleUserMenu() {
       this.userMenuActive = !this.userMenuActive;
+    },
+    cerrarSesion() {
+      // Limpia todo el localStorage
+      localStorage.clear();
+      // Navega a la página raíz
+      this.$router.push('/');
     }
   }
 };

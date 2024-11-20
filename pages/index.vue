@@ -1,5 +1,4 @@
-<template >
- 
+<template>
   <div class="background">
     <v-card
       class="mx-auto pa-12 pb-8 mt-16 position-relative"
@@ -9,10 +8,12 @@
       color=""
     >
       <div class="text-center my-8">
-        <v-card flat 
-          class="elevation-6 pa-4" 
+        <v-card
+          flat
+          class="elevation-6 pa-4"
           color="#FAE5C4ff"
-          max-width="500">
+          max-width="500"
+        >
           <v-card-title class="text-h4 font-weight-bold text-uppercase">
             Login
             <svg-icon class="large-icon" type="mdi" :path="path"></svg-icon>
@@ -22,40 +23,54 @@
 
       <div class="text-subtitle-1 text-medium-emphasis">Cuenta</div>
 
-      <v-text-field
-        v-model="email"
-        density="compact"
-        placeholder="ejemplo@corre.com"
-        prepend-inner-icon="mdi-email-outline"
-        variant="outlined"
-      ></v-text-field>
+      <!-- Inicio del Formulario -->
+      <form @submit.prevent="logueo">
+        <v-text-field
+          v-model="email"
+          density="compact"
+          placeholder="ejemplo@corre.com"
+          prepend-inner-icon="mdi-email-outline"
+          variant="outlined"
+          @keyup.enter="logueo" 
+        ></v-text-field>
 
-      <div
-        class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between"
-      >
-        Contraseña        
-      </div>
+        <div
+          class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between"
+        >
+          Contraseña        
+        </div>
 
-      <v-text-field
-        v-model="password"
-        :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
-        :type="visible ? 'text' : 'password'"
-        density="compact"
-        placeholder="Ingresa la contraseña"
-        prepend-inner-icon="mdi-lock-outline"
-        variant="outlined"
-        @click:append-inner="visible = !visible"
-      ></v-text-field>
+        <v-text-field
+          v-model="password"
+          :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+          :type="visible ? 'text' : 'password'"
+          density="compact"
+          placeholder="Ingresa la contraseña"
+          prepend-inner-icon="mdi-lock-outline"
+          variant="outlined"
+          @click:append-inner="visible = !visible"
+          @keyup.enter="logueo" 
+        ></v-text-field>
 
-      <v-card class="mb-12" color="surface-variant" variant="tonal">
-        <v-card-text class="text-medium-emphasis text-caption">
-          Recuerda: Tienes que registrarte primero antes de usar la aplicación
-        </v-card-text>
-      </v-card>
+        <v-card class="mb-12" color="surface-variant" variant="tonal">
+          <v-card-text class="text-medium-emphasis text-caption">
+            Recuerda: Tienes que registrarte primero antes de usar la aplicación
+          </v-card-text>
+        </v-card>
 
-      <v-btn class="mb-8" color="#e29818ff" size="large" variant="tonal" block @click="logueo">
-        Ingresar
-      </v-btn>
+        <!-- Botón de Ingreso -->
+        <v-btn
+          class="mb-8"
+          color="#e29818ff"
+          size="large"
+          variant="tonal"
+          block
+          type="submit" 
+        >
+          Ingresar
+        </v-btn>
+      </form>
+      <!-- Fin del Formulario -->
 
       <v-card-text class="text-center">
         <nuxt-link
@@ -66,27 +81,17 @@
           Registrate ahora <v-icon icon="mdi-chevron-right"></v-icon>
         </nuxt-link>
       </v-card-text>
+
+      <!-- Mostrar Mensaje de Error -->
+      <div v-if="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
     </v-card>
   </div>
 </template>
 
-<style scoped>
-.large-icon {
-  margin-top: 1px;
-  width: 35px;
-  height: 35px;
-}
-.custom-text-color {
-  color: #e29818ff;
-}
-.background {
-  background-color: #fff1d95a;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-</style>
+
+
 
 <script>
 import SvgIcon from '@jamescoyle/vue-icon';
@@ -125,3 +130,26 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.large-icon {
+  margin-top: 1px;
+  width: 35px;
+  height: 35px;
+}
+.custom-text-color {
+  color: #e29818ff;
+}
+.background {
+  background-color: #fff1d95a;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.error-message {
+  color: red;
+  text-align: center;
+  margin-top: 10px;
+}
+</style>

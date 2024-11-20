@@ -28,7 +28,7 @@
               {{ tarea.contenido_nota }}
               <v-alert v-if="isExpiringSoon(tarea)" type="info" density="compact" variant="tonal"
                 class="mt-2">
-                ¡Esta tarea está a punto de expirar!
+                ¡Esta tarea expira en menos de 24 hrs!
               </v-alert>
             </v-card-text>
             <v-card-actions>
