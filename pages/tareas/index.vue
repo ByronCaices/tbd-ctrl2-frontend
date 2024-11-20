@@ -21,10 +21,15 @@
 
       <v-row>
         <v-col v-for="tarea in tareasFiltradas" :key="tarea.id_nota" cols="12" sm="6" md="4">
-          <v-card :title="tarea.nombre_nota" variant="tonal" :color="tarea.completa_check_nota ? 'green' : 'red'">
+          <v-card :title="tarea.nombre_nota" variant="tonal" :color="tarea.completa_check_nota ? 'green' : 'red'"
+            :loading="isExpiringSoon(tarea)">
             <v-card-subtitle>Deadline: {{ tarea.fecha_nota }}</v-card-subtitle>
             <v-card-text>
               {{ tarea.contenido_nota }}
+              <v-alert v-if="isExpiringSoon(tarea)" type="info" density="compact" variant="tonal"
+                class="mt-2">
+                ¡Esta tarea está a punto de expirar!
+              </v-alert>
             </v-card-text>
             <v-card-actions>
               <!-- Botón para marcar como completada o pendiente -->
@@ -55,14 +60,7 @@
             <v-form ref="formEditar">
               <v-text-field label="Nombre" v-model="tareaAEditar.nombre_nota"></v-text-field>
               <v-textarea label="Contenido" v-model="tareaAEditar.contenido_nota"></v-textarea>
-              <v-menu ref="menu" v-model="menu" :close-on-content-click="false" transition="scale-transition" offset-y
-                min-width="290px">
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field v-model="tareaAEditar.fecha_nota" label="Fecha" prepend-icon="mdi-calendar" readonly
-                    v-bind="attrs" v-on="on"></v-text-field>
-                </template>
-                <v-date-picker v-model="tareaAEditar.fecha_nota" no-title @input="menu = false"></v-date-picker>
-              </v-menu>
+              <v-text-field v-model="tareaAEditar.fecha_nota" label="Fecha" type="date"></v-text-field>
             </v-form>
           </v-card-text>
           <v-card-actions>
@@ -146,7 +144,8 @@ export default {
       filtro: "todas",
       dialogEditar: false,
       tareaAEditar: null,
-      menu: false, // Para el date picker
+      menuFecha: false, // Para el date picker
+
     };
   },
   computed: {
@@ -211,6 +210,15 @@ export default {
         console.error('Error al eliminar la tarea:', error);
       }
       //window.location.reload();
+    },
+    isExpiringSoon(tarea) {
+      if (tarea.completa_check_nota) {
+        return false; // Si la tarea está completada, no está por expirar
+      }
+      const now = new Date();
+      const dueDate = new Date(tarea.fecha_nota);
+      const timeDiff = dueDate - now;
+      return timeDiff > 0 && timeDiff <= 24 * 60 * 60 * 1000; // 24 horas en milisegundos
     },
     irAAñadir() {
       this.$router.push("/tareas/nueva");
